@@ -1,7 +1,7 @@
 module Enumerable
   def my_each
     index = 0
-    while index <= self.size - 1
+    while index <= size - 1
       yield(self[index])
       index += 1
     end
@@ -10,7 +10,7 @@ module Enumerable
 
   def my_each_with_index
     index = 0
-    self.my_each do |value|
+    my_each do |value|
       yield(value, index)
       index += 1
     end
