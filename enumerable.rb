@@ -7,6 +7,15 @@ module Enumerable
     end
     self
   end
+
+  def my_each_with_index
+    index = 0
+    self.my_each do |value|
+      yield(value, index)
+      index += 1
+    end
+    self
+  end
 end
 
-puts [1, 2, 3, 4].my_each { }
+[1, 2, 3, 4].my_each_with_index { |a, b| puts "#{b} =#{a}" }
