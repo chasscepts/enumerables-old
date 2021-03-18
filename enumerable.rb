@@ -22,4 +22,38 @@ module Enumerable
     my_each { |item| result << item if yield item }
     result
   end
+
+  def my_all(pattern = nil)
+    all = true
+    if block_given?
+      my_each do |value|
+        if !yield(value)
+          all = false
+        end
+      end
+    elsif !pattern.nil?
+      my_each do |value|
+        if !match_pattern(value, pattern)
+          all = false
+        end
+      end
+    else
+      my_each do |value|
+        if !value
+          all = false
+        end
+      end
+    end
+    all
+  end
+
+  private
+
+  def match_pattern(item, pattern)
+    return true if item == pattern || item =~ pattern
+    begin
+      return true if item.is_a?(pattern)
+    rescue TypeError => exception;     end
+    false
+  end
 end
