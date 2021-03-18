@@ -16,6 +16,10 @@ module Enumerable
     end
     self
   end
-end
 
-[1, 2, 3, 4].my_each_with_index { |a, b| puts "#{b} =#{a}" }
+  def my_select
+    result = []
+    my_each { |item| result << item if yield item }
+    result
+  end
+end
