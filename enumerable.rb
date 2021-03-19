@@ -86,10 +86,18 @@ module Enumerable
     memo
   end
 
-  def my_map
-    new_array = []
-    my_each { |value| new_array << proc.call(value) }
-    new_array
+  def my_map(proc = nil)
+    if !proc.nil
+      new_array = []
+      my_each { |value| new_array << proc.call(value) }
+      new_array
+    elsif block_given?
+      new_array = []
+      my_each { |value| new_array << yield(value) }
+      new_array
+    else
+      to_enum
+    end
   end
 
   private
