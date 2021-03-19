@@ -1,11 +1,12 @@
 module Enumerable
   def my_each
+    array = to_a
     index = 0
-    while index <= size - 1
-      yield(self[index])
+    while index <= array.size - 1
+      yield(array[index])
       index += 1
     end
-    self
+    array
   end
 
   def my_each_with_index
@@ -14,7 +15,6 @@ module Enumerable
       yield(value, index)
       index += 1
     end
-    self
   end
 
   def my_select
@@ -72,6 +72,15 @@ module Enumerable
       my_each { items_count += 1 }
     end
     items_count
+  end
+
+  def my_map
+    if block_given?
+      new_array = []
+      my_each { |value| new_array << yield(value) }
+      return new_array
+    end
+    to_enum
   end
 
   private
