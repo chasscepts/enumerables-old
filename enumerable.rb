@@ -83,6 +83,49 @@ module Enumerable
     to_enum
   end
 
+  def my_inject(*args)
+    array = to_a
+    length = array.size
+
+    if block_given?
+      if args.size == 0
+        memo = array[0]
+        index = 1
+      else
+        memo = args[0]
+        index = 0
+      end
+
+      while index < length
+        memo = yield(memo, array[index])
+        index += 1
+      end
+
+      return memo
+    end
+
+    if(args.size == 0)
+      raise LocalJumpError.new('no block given')
+    end
+
+    if args.size == 2
+      memo = args[0]
+      sym = args[1]
+      index = 0
+    else
+      memo = array[0]
+      sym = args[0]
+      index = 1
+    end
+
+    while index < length
+      memo = memo.send(sym, array[index])
+      index += 1
+    end
+
+    memo
+  end
+
   private
 
   def match_pattern(item, pattern)
@@ -96,3 +139,8 @@ module Enumerable
     false
   end
 end
+
+puts "#{(5..10).my_inject(:+)} #=> 45"
+puts "#{(5..10).my_inject { |sum, n| sum + n }} #=> 45"
+puts "#{(5..10).my_inject(1, :*)} #=> 151200"
+puts "#{(5..10).my_inject(1) { |product, n| product * n }} #=> 151200"
