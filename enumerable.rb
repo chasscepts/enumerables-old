@@ -1,4 +1,6 @@
 module Enumerable
+  public
+
   def my_each
     index = 0
     while index <= size - 1
@@ -45,6 +47,19 @@ module Enumerable
       end
     end
     all
+  end
+
+  def my_any?(pattern = nil)
+    if block_given?
+      my_each { |item| return true if yield(item) }
+      return false
+    end
+    if !pattern.nil?
+      my_each { |item| return true if match_pattern(item, pattern) }
+      return false
+    end
+    my_each { |item| return true if item }
+    false
   end
 
   private
