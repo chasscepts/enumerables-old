@@ -1,6 +1,4 @@
 module Enumerable
-  public
-
   def my_each
     index = 0
     while index <= size - 1
@@ -26,27 +24,16 @@ module Enumerable
   end
 
   def my_all(pattern = nil)
-    all = true
     if block_given?
-      my_each do |value|
-        if !yield(value)
-          all = false
-        end
-      end
-    elsif !pattern.nil?
-      my_each do |value|
-        if !match_pattern(value, pattern)
-          all = false
-        end
-      end
-    else
-      my_each do |value|
-        if !value
-          all = false
-        end
-      end
+      my_each { |value| return false unless yield(value) }
+      return true
     end
-    all
+    unless pattern.nil
+      my_each { |value| return false unless match_pattern(value, pattern) }
+      return true
+    end
+    my_each { |value| return false unless value }
+    true
   end
 
   def my_any?(pattern = nil)
@@ -54,7 +41,7 @@ module Enumerable
       my_each { |item| return true if yield(item) }
       return false
     end
-    if !pattern.nil?
+    unless pattern.nil?
       my_each { |item| return true if match_pattern(item, pattern) }
       return false
     end
@@ -67,11 +54,11 @@ module Enumerable
       my_each { |value| return false if yield(value) }
       true
     end
-    if !pattern.nil?
+    unless pattern.nil?
       my_each { |value| return false if match_pattern(value, pattern) }
       true
     end
-    my_each { |value| return false if item }
+    my_each { |_value| return false if item }
     true
   end
 
@@ -79,18 +66,12 @@ module Enumerable
 
   def match_pattern(item, pattern)
     return true if item == pattern || item =~ pattern
+
     begin
       return true if item.is_a?(pattern)
-    rescue TypeError => exception;     end
+    rescue TypeError
+      return false
+    end
     false
   end
 end
-
-puts "#{%w{ant bear cat}.none? { |word| word.length == 5 }} #=> true"
-puts "#{%w{ant bear cat}.none? { |word| word.length >= 4 }} #=> false"
-puts "#{%w{ant bear cat}.none?(/d/)}#=> true"
-puts "#{[1, 3.14, 42].none?(Float)} #=> false"
-puts "#{[].none?}#=> true"
-puts "#{[nil].none?} #=> true"
-puts "#{[nil, false].none?} #=> true"
-puts "#{[nil, false, true].none?} #=> false"
