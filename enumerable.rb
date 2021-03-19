@@ -62,6 +62,19 @@ module Enumerable
     false
   end
 
+  def my_none?(pattern = nil)
+    if block_given?
+      my_each { |value| return false if yield(value) }
+      true
+    end
+    if !pattern.nil?
+      my_each { |value| return false if match_pattern(value, pattern) }
+      true
+    end
+    my_each { |value| return false if item }
+    true
+  end
+
   private
 
   def match_pattern(item, pattern)
@@ -72,3 +85,12 @@ module Enumerable
     false
   end
 end
+
+puts "#{%w{ant bear cat}.none? { |word| word.length == 5 }} #=> true"
+puts "#{%w{ant bear cat}.none? { |word| word.length >= 4 }} #=> false"
+puts "#{%w{ant bear cat}.none?(/d/)}#=> true"
+puts "#{[1, 3.14, 42].none?(Float)} #=> false"
+puts "#{[].none?}#=> true"
+puts "#{[nil].none?} #=> true"
+puts "#{[nil, false].none?} #=> true"
+puts "#{[nil, false, true].none?} #=> false"
