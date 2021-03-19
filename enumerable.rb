@@ -70,15 +70,6 @@ module Enumerable
     items_count
   end
 
-  def my_map
-    if block_given?
-      new_array = []
-      my_each { |value| new_array << yield(value) }
-      return new_array
-    end
-    to_enum
-  end
-
   def my_inject(*args)
     array = to_a
 
@@ -93,6 +84,12 @@ module Enumerable
     (index...array.size).my_each { |idx| memo = memo.send(sym, array[idx]) }
 
     memo
+  end
+
+  def my_map
+    new_array = []
+    my_each { |value| new_array << proc.call(value) }
+    new_array
   end
 
   private
