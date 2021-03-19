@@ -62,6 +62,18 @@ module Enumerable
     true
   end
 
+  def my_count(item = nil)
+    items_count = 0
+    if !item.nil?
+      my_each { |value| items_count += 1 if value == item }
+    elsif block_given?
+      my_each { |value| items_count += 1 if yield(value) }
+    else
+      my_each { |value| items_count += 1 }
+    end
+    items_count
+  end
+
   private
 
   def match_pattern(item, pattern)
@@ -75,3 +87,8 @@ module Enumerable
     false
   end
 end
+
+ary = [1, 2, 4, 2]
+puts "#{ary.my_count} #=> 4"
+puts "#{ary.my_count(2)} #=> 2"
+puts "#{ary.my_count{ |x| x%2==0 }} #=> 3"
