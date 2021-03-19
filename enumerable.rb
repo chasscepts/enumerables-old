@@ -140,7 +140,6 @@ module Enumerable
   end
 end
 
-puts "#{(5..10).my_inject(:+)} #=> 45"
-puts "#{(5..10).my_inject { |sum, n| sum + n }} #=> 45"
-puts "#{(5..10).my_inject(1, :*)} #=> 151200"
-puts "#{(5..10).my_inject(1) { |product, n| product * n }} #=> 151200"
+def multiply_els(array)
+  array.my_inject(:*)
+end
